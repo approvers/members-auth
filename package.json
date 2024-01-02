@@ -1,19 +1,31 @@
 {
-  "name": "discord-oidc-worker",
-  "version": "0.1.0",
-  "private": true,
-  "description": "Discord OpenID Connect wrapper in Cloudflare Workers.",
-  "scripts": {
-    "start": "wrangler dev --local"
-  },
-  "license": "Apache-2.0",
-  "dependencies": {
-    "hono": "^2.6.2",
-    "jose": "^4.11.1",
-    "wrangler": "^2.20.1"
-  },
-  "packageManager": "bun@1.0.20",
-  "devDependencies": {
-    "@cloudflare/workers-types": "^4.20231218.0"
-  }
+    "name": "discord-oidc-worker",
+    "version": "0.1.0",
+    "private": true,
+    "description": "Discord OpenID Connect wrapper in Cloudflare Workers.",
+    "scripts": {
+        "start": "wrangler dev --local",
+        "deploy": "wrangler deploy --minify src/index.tsx",
+        "lint": "eslint \"src/**/*.{ts,tsx}\"",
+        "format": "prettier --write \"src/**/*.{ts,tsx}\"",
+        "check": "prettier --check \"src/**/*.{ts,tsx}\" && tsc --noEmit"
+    },
+    "license": "Apache-2.0",
+    "dependencies": {
+        "hono": "^2.6.2",
+        "jose": "^4.11.1"
+    },
+    "packageManager": "bun@1.0.20",
+    "devDependencies": {
+        "@cloudflare/workers-types": "^4.20231218.0",
+        "@typescript-eslint/eslint-plugin": "^6.13.1",
+        "@typescript-eslint/parser": "^6.13.1",
+        "eslint": "^8.54.0",
+        "eslint-config-prettier": "^9.0.0",
+        "eslint-plugin-react": "^7.33.2",
+        "eslint-plugin-simple-import-sort": "^10.0.0",
+        "prettier": "^3.1.0",
+        "typescript": "^5.3.2",
+        "wrangler": "^3.18.0"
+    }
 }
