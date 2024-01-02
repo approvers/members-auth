@@ -1,4 +1,4 @@
-import * as config from './config.json'
+import * as config from '../config.json' assert {type: "json"};
 import { Hono } from 'hono'
 import * as jose from 'jose'
 
