@@ -4,7 +4,7 @@
     "private": true,
     "description": "Discord OpenID Connect wrapper in Cloudflare Workers.",
     "scripts": {
-        "start": "wrangler dev --local",
+        "start": "wrangler dev",
         "deploy": "wrangler deploy --minify src/main.ts",
         "lint": "eslint \"src/**/*.{ts,tsx}\"",
         "format": "prettier --write \"src/**/*.{ts,tsx}\"",
