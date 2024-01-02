@@ -63,17 +63,18 @@ type Bindings = {
 
 const app = new Hono<{ Bindings: Bindings }>();
 
-app.get("/authorize/:scopemode", async (c) => {
+app.get("/authorize/:scope_mode", async (c) => {
+    const SCOPE_MODES = ["guilds", "email"];
     if (
         c.req.query("client_id") !== config.clientId ||
         c.req.query("redirect_uri") !== config.redirectURL ||
-        !["guilds", "email"].includes(c.req.param("scopemode"))
+        !SCOPE_MODES.includes(c.req.param("scope_mode"))
     ) {
         return c.text("", 400);
     }
 
     const scope =
-        c.req.param("scopemode") == "guilds"
+        c.req.param("scope_mode") == "guilds"
             ? "identify email guilds"
             : "identify email";
     const params = new URLSearchParams({
