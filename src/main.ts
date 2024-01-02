@@ -56,6 +56,8 @@ async function loadOrGenerateKeyPair(store: KVNamespace) {
     };
 }
 
+const DISCORD_API_ROOT = "https://discord.com/api/v10";
+
 type Bindings = {
     KEY_CHAIN_store: KVNamespace;
     DISCORD_TOKEN: string;
@@ -101,16 +103,13 @@ app.post("/token", async (c) => {
         scope: "identify email",
     });
 
-    const tokenResponse = await fetch(
-        "https://discord.com/api/v10/oauth2/token",
-        {
-            method: "POST",
-            body: params,
-            headers: {
-                "Content-Type": "application/x-www-form-urlencoded",
-            },
+    const tokenResponse = await fetch(`${DISCORD_API_ROOT}/oauth2/token`, {
+        method: "POST",
+        body: params,
+        headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
         },
-    );
+    });
     if (!tokenResponse.ok) {
         return c.text("", 400);
     }
@@ -118,7 +117,7 @@ app.post("/token", async (c) => {
         access_token: string;
     }>();
 
-    const meResponse = await fetch("https://discord.com/api/v10/users/@me", {
+    const meResponse = await fetch(`${DISCORD_API_ROOT}/users/@me`, {
         headers: {
             Authorization: `Bearer ${access_token}`,
         },
@@ -141,14 +140,11 @@ app.post("/token", async (c) => {
 
     const servers: string[] = [];
 
-    const serverResp = await fetch(
-        "https://discord.com/api/v10/users/@me/guilds",
-        {
-            headers: {
-                Authorization: `Bearer ${access_token}`,
-            },
+    const serverResp = await fetch(`${DISCORD_API_ROOT}/users/@me/guilds`, {
+        headers: {
+            Authorization: `Bearer ${access_token}`,
         },
-    );
+    });
     if (serverResp.status === 200) {
         const serverJson = await serverResp.json<{ id: string }[]>();
         servers.push(...serverJson.map(({ id }) => id));
@@ -162,7 +158,7 @@ app.post("/token", async (c) => {
                 continue;
             }
             const memberResponse = await fetch(
-                `https://discord.com/api/v10/guilds/${guildId}/members/${meResult["id"]}`,
+                `${DISCORD_API_ROOT}/guilds/${guildId}/members/${meResult["id"]}`,
                 {
                     headers: {
                         Authorization: `Bot ${c.env.DISCORD_TOKEN}`,
