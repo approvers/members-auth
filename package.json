@@ -10,7 +10,7 @@
         "format": "prettier --write \"src/**/*.{ts,tsx}\"",
         "check": "prettier --check \"src/**/*.{ts,tsx}\" && tsc --noEmit"
     },
-    "license": "Apache-2.0",
+    "license": "MIT",
     "dependencies": {
         "hono": "^2.6.2",
         "jose": "^4.11.1"
