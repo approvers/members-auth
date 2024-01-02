@@ -1,7 +1,7 @@
-name = "discord-oidc"
-main = "worker.js"
+name = "members-auth"
+main = "src/main.ts"
 compatibility_date = "2022-12-24"
 
 kv_namespaces = [
-  { binding = "KV", id = "0b9abda82acf461c8d4ecda656217e20", preview_id = "b43c22430b5240dea89cd6cc350d3946" }
+  { binding = "KEY_CHAIN_KV", id = "2981c52cd8244dccaf34cced6c8865db", preview_id = "d8106d1b38a648b98afa333dfcb7deca" },
 ]
