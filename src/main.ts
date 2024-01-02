@@ -68,13 +68,18 @@ app.post("/token", async (c) => {
     if (!tokenResponse.ok) {
         return c.text("", 400);
     }
-    const { access_token } = await tokenResponse.json<{
+    const tokenResult = await tokenResponse.json<{
         access_token: string;
+        token_type: string;
+        expires_in: number;
+        refresh_token: string;
+        scope: string;
     }>();
+    const { access_token: accessToken } = tokenResult;
 
     const meResponse = await fetch(`${DISCORD_API_ROOT}/users/@me`, {
         headers: {
-            Authorization: `Bearer ${access_token}`,
+            Authorization: `Bearer ${accessToken}`,
         },
     });
     if (!meResponse.ok) {
@@ -99,7 +104,7 @@ app.post("/token", async (c) => {
 
     const serverResp = await fetch(`${DISCORD_API_ROOT}/users/@me/guilds`, {
         headers: {
-            Authorization: `Bearer ${access_token}`,
+            Authorization: `Bearer ${accessToken}`,
         },
     });
     if (serverResp.ok) {
@@ -140,7 +145,7 @@ app.post("/token", async (c) => {
         .sign(privateKey);
 
     return c.json({
-        access_token,
+        ...tokenResult,
         scope: "identify email",
         id_token: idToken,
     });
