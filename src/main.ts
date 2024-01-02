@@ -102,7 +102,7 @@ app.post("/token", async (c) => {
             Authorization: `Bearer ${access_token}`,
         },
     });
-    if (serverResp.status === 200) {
+    if (serverResp.ok) {
         const serverJson = await serverResp.json<{ id: string }[]>();
         servers.push(...serverJson.map(({ id }) => id));
     }
