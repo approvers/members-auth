@@ -1,15 +1,20 @@
 import { Hono } from "hono";
 import { SignJWT } from "jose";
 
-import * as config from "../config.json" assert { type: "json" };
 import { KVKeyStore } from "./adaptor/kv";
 import { loadOrGenerateKeyPair } from "./key";
 
 const DISCORD_API_ROOT = "https://discord.com/api/v10";
+const DISCORD_CLIENT_ID = "1191642657731121272";
+const DISCORD_CHECK_GUILD_ID = "683939861539192860";
+
+const CLOUDFLARE_ACCESS_REDIRECT_URI =
+    "https://approvers.cloudflareaccess.com/cdn-cgi/access/callback";
 
 type Bindings = {
     KEY_CHAIN_KV: KVNamespace;
     DISCORD_TOKEN: string;
+    DISCORD_CLIENT_SECRET: string;
 };
 
 const app = new Hono<{ Bindings: Bindings }>();
@@ -17,8 +22,8 @@ const app = new Hono<{ Bindings: Bindings }>();
 app.get("/authorize/:scope_mode", async (c) => {
     const SCOPE_MODES = ["guilds", "email"];
     if (
-        c.req.query("client_id") !== config.clientId ||
-        c.req.query("redirect_uri") !== config.redirectURL ||
+        c.req.query("client_id") !== DISCORD_CLIENT_ID ||
+        c.req.query("redirect_uri") !== CLOUDFLARE_ACCESS_REDIRECT_URI ||
         !SCOPE_MODES.includes(c.req.param("scope_mode"))
     ) {
         return c.text("", 400);
@@ -29,8 +34,8 @@ app.get("/authorize/:scope_mode", async (c) => {
             ? "identify email guilds"
             : "identify email";
     const params = new URLSearchParams({
-        client_id: config.clientId,
-        redirect_uri: config.redirectURL,
+        client_id: DISCORD_CLIENT_ID,
+        redirect_uri: CLOUDFLARE_ACCESS_REDIRECT_URI,
         response_type: "code",
         scope,
         state: c.req.query("state") ?? "",
@@ -45,9 +50,9 @@ app.post("/token", async (c) => {
 
     const code = body.code;
     const params = new URLSearchParams({
-        client_id: config.clientId,
-        client_secret: config.clientSecret,
-        redirect_uri: config.redirectURL,
+        client_id: DISCORD_CLIENT_ID,
+        client_secret: c.env.DISCORD_CLIENT_SECRET,
+        redirect_uri: CLOUDFLARE_ACCESS_REDIRECT_URI,
         code: code.toString(),
         grant_type: "authorization_code",
         scope: "identify email",
@@ -77,10 +82,12 @@ app.post("/token", async (c) => {
         return c.text("", 500);
     }
     const meResult = await meResponse.json<{
-        verified: unknown;
         id: string;
-        preferred_name: string;
-        email: string;
+        username: string;
+        discriminator: string;
+        global_name?: string;
+        verified?: boolean;
+        email?: string;
         [key: `roles:${string}`]: string;
     }>();
 
@@ -102,24 +109,19 @@ app.post("/token", async (c) => {
 
     const roleClaims: { [key: `roles:${string}`]: string[] } = {};
 
-    if (c.env.DISCORD_TOKEN && "serversToCheckRolesFor" in config) {
-        for (const guildId of config.serversToCheckRolesFor) {
-            if (!servers.includes(guildId)) {
-                continue;
-            }
-            const memberResponse = await fetch(
-                `${DISCORD_API_ROOT}/guilds/${guildId}/members/${meResult["id"]}`,
-                {
-                    headers: {
-                        Authorization: `Bot ${c.env.DISCORD_TOKEN}`,
-                    },
+    if (servers.includes(DISCORD_CHECK_GUILD_ID)) {
+        const memberResponse = await fetch(
+            `${DISCORD_API_ROOT}/guilds/${DISCORD_CHECK_GUILD_ID}/members/${meResult.id}`,
+            {
+                headers: {
+                    Authorization: `Bot ${c.env.DISCORD_TOKEN}`,
                 },
-            );
-            const { roles } = await memberResponse.json<{
-                roles: string[];
-            }>();
-            roleClaims[`roles:${guildId}`] = roles;
-        }
+            },
+        );
+        const { roles } = await memberResponse.json<{
+            roles: string[];
+        }>();
+        roleClaims[`roles:${DISCORD_CHECK_GUILD_ID}`] = roles;
     }
 
     const { privateKey } = await loadOrGenerateKeyPair(
@@ -127,14 +129,14 @@ app.post("/token", async (c) => {
     );
     const idToken = await new SignJWT({
         iss: "https://cloudflare.com",
-        aud: config.clientId,
+        aud: DISCORD_CLIENT_ID,
         ...meResult,
         ...roleClaims,
         guilds: servers,
     })
         .setProtectedHeader({ alg: "RS256" })
         .setExpirationTime("1h")
-        .setAudience(config.clientId)
+        .setAudience(DISCORD_CLIENT_ID)
         .sign(privateKey);
 
     return c.json({
