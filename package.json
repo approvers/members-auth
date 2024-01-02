@@ -3,7 +3,6 @@
   "version": "0.1.0",
   "private": true,
   "description": "Discord OpenID Connect wrapper in Cloudflare Workers.",
-  "main": "worker.js",
   "scripts": {
     "start": "wrangler dev --local"
   },
