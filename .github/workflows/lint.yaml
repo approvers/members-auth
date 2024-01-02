@@ -1,0 +1,19 @@
+name: Lint
+
+on:
+    pull_request:
+        branches: [main]
+    push:
+        branches: [main]
+
+jobs:
+    lint:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v4
+            - uses: oven-sh/setup-bun@v1
+            - run: bun install --frozen-lockfile
+            - name: Run lint
+              run: bun run lint
+            - name: Run check
+              run: bun run check
