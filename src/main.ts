@@ -99,7 +99,7 @@ app.post("/token", async (c) => {
         code: code.toString(),
         grant_type: "authorization_code",
         scope: "identify email",
-    }).toString();
+    });
 
     const tokenResponse = await fetch(
         "https://discord.com/api/v10/oauth2/token",
