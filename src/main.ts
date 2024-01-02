@@ -20,43 +20,40 @@ async function loadOrGenerateKeyPair(store: KVNamespace) {
         privateKey: ArrayBuffer | JsonWebKey;
     }>("keys", { type: "json" });
 
-    if (keyPairJson !== null) {
-        const keyPair = {
-            publicKey: await crypto.subtle.importKey(
-                "jwk",
-                keyPairJson.publicKey,
-                KEY_IMPORT_ALGORITHM,
-                true,
-                ["verify"],
-            ),
-            privateKey: await crypto.subtle.importKey(
-                "jwk",
-                keyPairJson.privateKey,
-                KEY_IMPORT_ALGORITHM,
-                true,
-                ["sign"],
-            ),
-        };
-
+    if (keyPairJson === null) {
+        const keyPair = (await crypto.subtle.generateKey(
+            KEY_GEN_ALGORITHM,
+            true,
+            ["sign", "verify"],
+        )) as CryptoKeyPair;
+        const privateKey = await crypto.subtle.exportKey(
+            "jwk",
+            keyPair.privateKey,
+        );
+        const publicKey = await crypto.subtle.exportKey(
+            "jwk",
+            keyPair.publicKey,
+        );
+        await store.put("keys", JSON.stringify({ privateKey, publicKey }));
         return keyPair;
     }
-    const keyPair = (await crypto.subtle.generateKey(KEY_GEN_ALGORITHM, true, [
-        "sign",
-        "verify",
-    ])) as CryptoKeyPair;
 
-    await store.put(
-        "keys",
-        JSON.stringify({
-            privateKey: await crypto.subtle.exportKey(
-                "jwk",
-                keyPair.privateKey,
-            ),
-            publicKey: await crypto.subtle.exportKey("jwk", keyPair.publicKey),
-        }),
-    );
-
-    return keyPair;
+    return {
+        publicKey: await crypto.subtle.importKey(
+            "jwk",
+            keyPairJson.publicKey,
+            KEY_IMPORT_ALGORITHM,
+            true,
+            ["verify"],
+        ),
+        privateKey: await crypto.subtle.importKey(
+            "jwk",
+            keyPairJson.privateKey,
+            KEY_IMPORT_ALGORITHM,
+            true,
+            ["sign"],
+        ),
+    };
 }
 
 type Bindings = {
