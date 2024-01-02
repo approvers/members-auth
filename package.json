@@ -5,7 +5,7 @@
     "description": "Discord OpenID Connect wrapper in Cloudflare Workers.",
     "scripts": {
         "start": "wrangler dev --local",
-        "deploy": "wrangler deploy --minify src/index.tsx",
+        "deploy": "wrangler deploy --minify src/main.ts",
         "lint": "eslint \"src/**/*.{ts,tsx}\"",
         "format": "prettier --write \"src/**/*.{ts,tsx}\"",
         "check": "prettier --check \"src/**/*.{ts,tsx}\" && tsc --noEmit"
