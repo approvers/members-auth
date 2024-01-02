@@ -6,7 +6,7 @@ import { loadOrGenerateKeyPair } from "./key";
 const DISCORD_API_ROOT = "https://discord.com/api/v10";
 
 type Bindings = {
-    KEY_CHAIN_store: KVNamespace;
+    KEY_CHAIN_KV: KVNamespace;
     DISCORD_TOKEN: string;
 };
 
@@ -120,7 +120,7 @@ app.post("/token", async (c) => {
         }
     }
 
-    const { privateKey } = await loadOrGenerateKeyPair(c.env.KEY_CHAIN_store);
+    const { privateKey } = await loadOrGenerateKeyPair(c.env.KEY_CHAIN_KV);
     const idToken = await new SignJWT({
         iss: "https://cloudflare.com",
         aud: config.clientId,
@@ -141,7 +141,7 @@ app.post("/token", async (c) => {
 });
 
 app.get("/jwks.json", async (c) => {
-    const { publicKey } = await loadOrGenerateKeyPair(c.env.KEY_CHAIN_store);
+    const { publicKey } = await loadOrGenerateKeyPair(c.env.KEY_CHAIN_KV);
     return c.json({
         keys: [
             {
