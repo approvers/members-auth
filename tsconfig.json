@@ -8,8 +8,6 @@
         "strict": true,
         "lib": ["esnext"],
         "types": ["@cloudflare/workers-types"],
-        "jsx": "react-jsx",
-        "jsxImportSource": "hono/jsx",
         "verbatimModuleSyntax": true
     }
 }
