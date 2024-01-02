@@ -1,31 +1,32 @@
 {
-    "name": "discord-oidc-worker",
-    "version": "0.1.0",
-    "private": true,
-    "description": "Discord OpenID Connect wrapper in Cloudflare Workers.",
-    "scripts": {
-        "start": "wrangler dev",
-        "deploy": "wrangler deploy --minify src/main.ts",
-        "lint": "eslint \"src/**/*.{ts,tsx}\"",
-        "format": "prettier --write \"src/**/*.{ts,tsx}\"",
-        "check": "prettier --check \"src/**/*.{ts,tsx}\" && tsc --noEmit"
-    },
-    "license": "MIT",
-    "dependencies": {
-        "hono": "^3.11.12",
-        "jose": "^5.2.0"
-    },
-    "packageManager": "bun@1.0.20",
-    "devDependencies": {
-        "@cloudflare/workers-types": "^4.20231218.0",
-        "@typescript-eslint/eslint-plugin": "^6.13.1",
-        "@typescript-eslint/parser": "^6.13.1",
-        "eslint": "^8.54.0",
-        "eslint-config-prettier": "^9.0.0",
-        "eslint-plugin-react": "^7.33.2",
-        "eslint-plugin-simple-import-sort": "^10.0.0",
-        "prettier": "^3.1.0",
-        "typescript": "^5.3.2",
-        "wrangler": "^3.22.1"
-    }
+  "name": "discord-oidc-worker",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Discord OpenID Connect wrapper in Cloudflare Workers.",
+  "scripts": {
+    "start": "wrangler dev",
+    "deploy": "wrangler deploy --minify src/main.ts",
+    "lint": "eslint \"src/**/*.{ts,tsx}\"",
+    "format": "prettier --write \"src/**/*.{ts,tsx}\"",
+    "check": "prettier --check \"src/**/*.{ts,tsx}\" && tsc --noEmit"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "@mikuroxina/mini-fn": "^5.4.3",
+    "hono": "^3.11.12",
+    "jose": "^5.2.0"
+  },
+  "packageManager": "bun@1.0.20",
+  "devDependencies": {
+    "@cloudflare/workers-types": "^4.20231218.0",
+    "@typescript-eslint/eslint-plugin": "^6.13.1",
+    "@typescript-eslint/parser": "^6.13.1",
+    "eslint": "^8.54.0",
+    "eslint-config-prettier": "^9.0.0",
+    "eslint-plugin-react": "^7.33.2",
+    "eslint-plugin-simple-import-sort": "^10.0.0",
+    "prettier": "^3.1.0",
+    "typescript": "^5.3.2",
+    "wrangler": "^3.22.1"
+  }
 }
