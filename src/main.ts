@@ -33,7 +33,7 @@ app.get("/authorize/:scope_mode", async (c) => {
         redirect_uri: config.redirectURL,
         response_type: "code",
         scope,
-        state: c.req.query("state"),
+        state: c.req.query("state") ?? "",
         prompt: "none",
     });
 
