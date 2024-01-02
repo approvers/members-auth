@@ -10,11 +10,18 @@ const KEY_IMPORT_ALGORITHM = {
     hash: { name: "SHA-256" },
 };
 
-export async function loadOrGenerateKeyPair(store: KVNamespace) {
-    const keyPairJson = await store.get<{
-        publicKey: ArrayBuffer | JsonWebKey;
-        privateKey: ArrayBuffer | JsonWebKey;
-    }>("keys", { type: "json" });
+export interface KeyEntry {
+    publicKey: ArrayBuffer | JsonWebKey;
+    privateKey: ArrayBuffer | JsonWebKey;
+}
+
+export interface KeyStore {
+    get(): Promise<KeyEntry | null>;
+    put(entry: KeyEntry): Promise<void>;
+}
+
+export async function loadOrGenerateKeyPair(store: KeyStore) {
+    const keyPairJson = await store.get();
 
     if (keyPairJson === null) {
         const keyPair = (await crypto.subtle.generateKey(
@@ -30,7 +37,7 @@ export async function loadOrGenerateKeyPair(store: KVNamespace) {
             "jwk",
             keyPair.publicKey,
         );
-        await store.put("keys", JSON.stringify({ privateKey, publicKey }));
+        await store.put({ privateKey, publicKey });
         return keyPair;
     }
 

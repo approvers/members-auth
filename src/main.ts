@@ -1,6 +1,8 @@
-import config from "../config.json" assert { type: "json" };
 import { Hono } from "hono";
 import { SignJWT } from "jose";
+
+import config from "../config.json" assert { type: "json" };
+import { KVKeyStore } from "./adaptor/kv";
 import { loadOrGenerateKeyPair } from "./key";
 
 const DISCORD_API_ROOT = "https://discord.com/api/v10";
@@ -120,7 +122,9 @@ app.post("/token", async (c) => {
         }
     }
 
-    const { privateKey } = await loadOrGenerateKeyPair(c.env.KEY_CHAIN_KV);
+    const { privateKey } = await loadOrGenerateKeyPair(
+        new KVKeyStore(c.env.KEY_CHAIN_KV),
+    );
     const idToken = await new SignJWT({
         iss: "https://cloudflare.com",
         aud: config.clientId,
@@ -141,7 +145,9 @@ app.post("/token", async (c) => {
 });
 
 app.get("/jwks.json", async (c) => {
-    const { publicKey } = await loadOrGenerateKeyPair(c.env.KEY_CHAIN_KV);
+    const { publicKey } = await loadOrGenerateKeyPair(
+        new KVKeyStore(c.env.KEY_CHAIN_KV),
+    );
     return c.json({
         keys: [
             {
