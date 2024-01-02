@@ -40,6 +40,7 @@ app.get("/authorize/:scope_mode", async (c) => {
 
 app.post("/token", async (c) => {
     const body = await c.req.parseBody();
+
     const code = body.code;
     const params = new URLSearchParams({
         client_id: config.clientId,
@@ -119,6 +120,7 @@ app.post("/token", async (c) => {
         }
     }
 
+    const { privateKey } = await loadOrGenerateKeyPair(c.env.KEY_CHAIN_store);
     const idToken = await new SignJWT({
         iss: "https://cloudflare.com",
         aud: config.clientId,
@@ -129,7 +131,7 @@ app.post("/token", async (c) => {
         .setProtectedHeader({ alg: "RS256" })
         .setExpirationTime("1h")
         .setAudience(config.clientId)
-        .sign((await loadOrGenerateKeyPair(c.env.KEY_CHAIN_store)).privateKey);
+        .sign(privateKey);
 
     return c.json({
         access_token,
