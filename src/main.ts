@@ -1,7 +1,7 @@
 import { Hono } from "hono";
 import { SignJWT } from "jose";
 
-import config from "../config.json" assert { type: "json" };
+import * as config from "../config.json" assert { type: "json" };
 import { KVKeyStore } from "./adaptor/kv";
 import { loadOrGenerateKeyPair } from "./key";
 
