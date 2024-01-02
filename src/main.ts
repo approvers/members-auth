@@ -84,9 +84,9 @@ app.get("/authorize/:scope_mode", async (c) => {
         scope,
         state: c.req.query("state"),
         prompt: "none",
-    }).toString();
+    });
 
-    return c.redirect("https://discord.com/oauth2/authorize?" + params);
+    return c.redirect(`https://discord.com/oauth2/authorize?${params}`);
 });
 
 app.post("/token", async (c) => {
