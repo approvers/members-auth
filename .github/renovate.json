@@ -12,9 +12,9 @@
     "dependencyDashboard": true,
     "semanticCommits": "enabled",
     "fetchReleaseNotes": "pr",
-    "fileMatch": ["(^|/)bun\\.lockb$"],
     "enabledManagers": ["npm", "github-actions"],
     "npm": {
+        "fileMatch": ["(^|/)bun\\.lockb$"],
         "stabilityDays": 3
     },
     "vulnerabilityAlerts": {
