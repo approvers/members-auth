@@ -41,6 +41,7 @@ app.get("/authorize", async (c) => {
 app.post("/token", async (c) => {
     const body = await c.req.parseBody();
     const code = body.code;
+    console.log(code);
 
     const res = await token({
         code: code.toString(),
@@ -50,6 +51,7 @@ app.post("/token", async (c) => {
         getKeyPair: () =>
             loadOrGenerateKeyPair(new KVKeyStore(c.env.KEY_CHAIN_KV)),
     });
+    console.log(res);
     if (Result.isErr(res)) {
         switch (res[1]) {
             case "TOKEN_GEN_FAILURE":
@@ -60,11 +62,13 @@ app.post("/token", async (c) => {
     }
 
     const { oAuthToken, jwt } = res[1];
-    return c.json({
+    const payload = {
         ...oAuthToken,
         scope: "identify email",
         id_token: jwt,
-    });
+    };
+    console.log(payload);
+    return c.json(payload);
 });
 
 app.get("/jwks.json", async (c) => {
