@@ -1,3 +1,5 @@
+import "@cloudflare/workers-types";
+
 import { Result } from "@mikuroxina/mini-fn";
 
 import {
@@ -32,13 +34,13 @@ export const generateToken =
             console.log(await tokenResponse.text());
             return Result.err("TOKEN_GEN_FAILURE");
         }
-        const tokenResult = await tokenResponse.json<{
+        const tokenResult = (await tokenResponse.json()) as {
             access_token: string;
             token_type: string;
             expires_in: number;
             refresh_token: string;
             scope: string;
-        }>();
+        };
         return Result.ok(tokenResult);
     };
 
@@ -54,14 +56,14 @@ export const me = async (accessToken: string): Promise<User> => {
         throw new Error("failed to get user info");
     }
 
-    const meResult = await meResponse.json<{
+    const meResult = (await meResponse.json()) as {
         id: string;
         username: string;
         discriminator: string;
         global_name?: string;
         verified?: boolean;
         email?: string;
-    }>();
+    };
     if (!meResult.verified) {
         throw new Error("email unverified");
     }
@@ -76,7 +78,7 @@ export const me = async (accessToken: string): Promise<User> => {
         console.log(await guildsResponse.text());
         throw new Error("failed to get guilds info");
     }
-    const guilds = (await guildsResponse.json<{ id: string }[]>()).map(
+    const guilds = ((await guildsResponse.json()) as { id: string }[]).map(
         ({ id }) => id,
     );
 
@@ -97,8 +99,8 @@ export const rolesOf =
                 },
             },
         );
-        const { roles } = await memberResponse.json<{
+        const { roles } = (await memberResponse.json()) as {
             roles: string[];
-        }>();
+        };
         return roles;
     };

@@ -1,3 +1,4 @@
+import type { KVNamespace } from "@cloudflare/workers-types";
 import { Result } from "@mikuroxina/mini-fn";
 import { Hono } from "hono";
 

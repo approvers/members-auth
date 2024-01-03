@@ -11,8 +11,8 @@ const KEY_IMPORT_ALGORITHM = {
 };
 
 export interface KeyEntry {
-    publicKey: ArrayBuffer | JsonWebKey;
-    privateKey: ArrayBuffer | JsonWebKey;
+    publicKey: JsonWebKey;
+    privateKey: JsonWebKey;
 }
 
 export interface KeyStore {
@@ -24,7 +24,6 @@ export async function loadOrGenerateKeyPair(
     store: KeyStore,
 ): Promise<CryptoKeyPair> {
     const keyPairJson = await store.get();
-    console.log(keyPairJson);
 
     if (keyPairJson === null) {
         const keyPair = (await crypto.subtle.generateKey(

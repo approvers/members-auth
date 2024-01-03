@@ -1,4 +1,4 @@
-name: Lint
+name: CI
 
 on:
     pull_request:
@@ -17,3 +17,11 @@ jobs:
               run: bun run lint
             - name: Run check
               run: bun run check
+    test:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v4
+            - uses: oven-sh/setup-bun@v1
+            - run: bun install --frozen-lockfile
+            - name: Run test
+              run: bun test
