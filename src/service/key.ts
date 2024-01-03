@@ -20,7 +20,9 @@ export interface KeyStore {
     put(entry: KeyEntry): Promise<void>;
 }
 
-export async function loadOrGenerateKeyPair(store: KeyStore) {
+export async function loadOrGenerateKeyPair(
+    store: KeyStore,
+): Promise<CryptoKeyPair> {
     const keyPairJson = await store.get();
 
     if (keyPairJson === null) {
