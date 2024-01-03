@@ -28,7 +28,8 @@ export const generateToken =
         });
         if (!tokenResponse.ok) {
             console.log(params);
-            tokenResponse.text().then(console.log);
+            console.log(tokenResponse.status);
+            console.log(await tokenResponse.text());
             return Result.err("TOKEN_GEN_FAILURE");
         }
         const tokenResult = await tokenResponse.json<{
@@ -48,7 +49,8 @@ export const me = async (accessToken: string): Promise<User> => {
         },
     });
     if (!meResponse.ok) {
-        meResponse.text().then(console.log);
+        console.log(meResponse.status);
+        console.log(await meResponse.text());
         throw new Error("failed to get user info");
     }
 
@@ -70,7 +72,8 @@ export const me = async (accessToken: string): Promise<User> => {
         },
     });
     if (!guildsResponse.ok) {
-        guildsResponse.text().then(console.log);
+        console.log(guildsResponse.status);
+        console.log(await guildsResponse.text());
         throw new Error("failed to get guilds info");
     }
     const guilds = (await guildsResponse.json<{ id: string }[]>()).map(
