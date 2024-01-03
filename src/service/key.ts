@@ -11,8 +11,8 @@ const KEY_IMPORT_ALGORITHM = {
 };
 
 export interface KeyEntry {
-    publicKey: ArrayBuffer | JsonWebKey;
-    privateKey: ArrayBuffer | JsonWebKey;
+    publicKey: JsonWebKey;
+    privateKey: JsonWebKey;
 }
 
 export interface KeyStore {
