@@ -1,4 +1,4 @@
-import type { KeyEntry, KeyStore } from "../key";
+import type { KeyEntry, KeyStore } from "../service/key";
 
 export class InMemoryKeyStore implements KeyStore {
     entry: KeyEntry | null = null;

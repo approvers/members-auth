@@ -1,4 +1,4 @@
-import type { KeyEntry, KeyStore } from "../key";
+import type { KeyEntry, KeyStore } from "../service/key";
 
 const NAMESPACE_KEY = "keys";
 

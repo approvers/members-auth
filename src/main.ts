@@ -1,12 +1,12 @@
+import { Result } from "@mikuroxina/mini-fn";
 import { Hono } from "hono";
-import { SignJWT } from "jose";
 
+import { generateToken, me, rolesOf } from "./adaptor/discord";
 import { KVKeyStore } from "./adaptor/kv";
-import { loadOrGenerateKeyPair } from "./key";
+import { loadOrGenerateKeyPair } from "./service/key";
+import { token } from "./service/token";
 
-const DISCORD_API_ROOT = "https://discord.com/api/v10";
 const DISCORD_CLIENT_ID = "1191642657731121272";
-const DISCORD_CHECK_GUILD_ID = "683939861539192860";
 
 const CLOUDFLARE_ACCESS_REDIRECT_URI =
     "https://approvers.cloudflareaccess.com/cdn-cgi/access/callback";
@@ -19,25 +19,18 @@ type Bindings = {
 
 const app = new Hono<{ Bindings: Bindings }>();
 
-app.get("/authorize/:scope_mode", async (c) => {
-    const SCOPE_MODES = ["guilds", "email"];
+app.get("/authorize", async (c) => {
     if (
         c.req.query("client_id") !== DISCORD_CLIENT_ID ||
-        c.req.query("redirect_uri") !== CLOUDFLARE_ACCESS_REDIRECT_URI ||
-        !SCOPE_MODES.includes(c.req.param("scope_mode"))
+        c.req.query("redirect_uri") !== CLOUDFLARE_ACCESS_REDIRECT_URI
     ) {
         return c.text("", 400);
     }
-
-    const scope =
-        c.req.param("scope_mode") == "guilds"
-            ? "identify email guilds"
-            : "identify email";
     const params = new URLSearchParams({
         client_id: DISCORD_CLIENT_ID,
         redirect_uri: CLOUDFLARE_ACCESS_REDIRECT_URI,
         response_type: "code",
-        scope,
+        scope: "identify email guilds",
         state: c.req.query("state") ?? "",
         prompt: "none",
     });
@@ -47,107 +40,30 @@ app.get("/authorize/:scope_mode", async (c) => {
 
 app.post("/token", async (c) => {
     const body = await c.req.parseBody();
-
     const code = body.code;
-    const params = new URLSearchParams({
-        client_id: DISCORD_CLIENT_ID,
-        client_secret: c.env.DISCORD_CLIENT_SECRET,
-        redirect_uri: CLOUDFLARE_ACCESS_REDIRECT_URI,
+
+    const res = await token({
         code: code.toString(),
-        grant_type: "authorization_code",
-        scope: "identify email",
+        generateToken: generateToken(c.env.DISCORD_CLIENT_SECRET),
+        me,
+        rolesOf: rolesOf(c.env.DISCORD_TOKEN),
+        getKeyPair: () =>
+            loadOrGenerateKeyPair(new KVKeyStore(c.env.KEY_CHAIN_KV)),
     });
-
-    const tokenResponse = await fetch(`${DISCORD_API_ROOT}/oauth2/token`, {
-        method: "POST",
-        body: params,
-        headers: {
-            "Content-Type": "application/x-www-form-urlencoded",
-        },
-    });
-    if (!tokenResponse.ok) {
-        return c.text("", 400);
-    }
-    const tokenResult = await tokenResponse.json<{
-        access_token: string;
-        token_type: string;
-        expires_in: number;
-        refresh_token: string;
-        scope: string;
-    }>();
-    const { access_token: accessToken } = tokenResult;
-
-    const meResponse = await fetch(`${DISCORD_API_ROOT}/users/@me`, {
-        headers: {
-            Authorization: `Bearer ${accessToken}`,
-        },
-    });
-    if (!meResponse.ok) {
-        meResponse.text().then(console.error);
-        return c.text("", 500);
-    }
-    const meResult = await meResponse.json<{
-        id: string;
-        username: string;
-        discriminator: string;
-        global_name?: string;
-        verified?: boolean;
-        email?: string;
-        [key: `roles:${string}`]: string;
-    }>();
-
-    if (!meResult.verified) {
-        return c.text("", 400);
+    if (Result.isErr(res)) {
+        switch (res[1]) {
+            case "TOKEN_GEN_FAILURE":
+                return c.text("", 500);
+            case "NOT_VERIFIED":
+                return c.text("email not verified", 400);
+        }
     }
 
-    const servers: string[] = [];
-
-    const serverResp = await fetch(`${DISCORD_API_ROOT}/users/@me/guilds`, {
-        headers: {
-            Authorization: `Bearer ${accessToken}`,
-        },
-    });
-    if (serverResp.ok) {
-        const serverJson = await serverResp.json<{ id: string }[]>();
-        servers.push(...serverJson.map(({ id }) => id));
-    }
-
-    const roleClaims: { [key: `roles:${string}`]: string[] } = {};
-
-    if (servers.includes(DISCORD_CHECK_GUILD_ID)) {
-        const memberResponse = await fetch(
-            `${DISCORD_API_ROOT}/guilds/${DISCORD_CHECK_GUILD_ID}/members/${meResult.id}`,
-            {
-                headers: {
-                    Authorization: `Bot ${c.env.DISCORD_TOKEN}`,
-                },
-            },
-        );
-        const { roles } = await memberResponse.json<{
-            roles: string[];
-        }>();
-        roleClaims[`roles:${DISCORD_CHECK_GUILD_ID}`] = roles;
-    }
-
-    const { privateKey } = await loadOrGenerateKeyPair(
-        new KVKeyStore(c.env.KEY_CHAIN_KV),
-    );
-    const idToken = await new SignJWT({
-        iss: "https://cloudflare.com",
-        aud: DISCORD_CLIENT_ID,
-        ...meResult,
-        ...roleClaims,
-        guilds: servers,
-    })
-        .setProtectedHeader({ alg: "RS256" })
-        .setExpirationTime("1h")
-        .setAudience(DISCORD_CLIENT_ID)
-        .sign(privateKey);
-
+    const { oAuthToken, jwt } = res[1];
     return c.json({
-        ...tokenResult,
+        ...oAuthToken,
         scope: "identify email",
-        id_token: idToken,
+        id_token: jwt,
     });
 });
 
