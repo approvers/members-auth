@@ -27,6 +27,8 @@ export const generateToken =
             },
         });
         if (!tokenResponse.ok) {
+            console.log(params);
+            tokenResponse.text().then(console.log);
             return Result.err("TOKEN_GEN_FAILURE");
         }
         const tokenResult = await tokenResponse.json<{
