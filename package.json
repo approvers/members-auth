@@ -13,7 +13,7 @@
   "license": "MIT",
   "dependencies": {
     "@mikuroxina/mini-fn": "^6.0.0",
-    "hono": "^3.11.12",
+    "hono": "^4.0.0",
     "jose": "^5.2.0"
   },
   "packageManager": "bun@1.1.3",
