@@ -1,5 +1,5 @@
 import { Promise, Result } from "@mikuroxina/mini-fn";
-import { expect, test } from "bun:test";
+import { expect, test } from "vitest";
 
 import { InMemoryKeyStore } from "../adaptor/in-memory";
 import { loadOrGenerateKeyPair } from "./key";
@@ -30,7 +30,7 @@ test("happy path", async () => {
         rolesOf: () => Promise.pure([]),
         getKeyPair: () => loadOrGenerateKeyPair(new InMemoryKeyStore()),
     });
-    expect(Result.isOk(res)).toBeTrue();
+    expect(Result.isOk(res)).toBeTruthy();
     expect(
         (
             res[1] as {
@@ -70,7 +70,7 @@ test("unverified", async () => {
         rolesOf: () => Promise.pure([]),
         getKeyPair: () => loadOrGenerateKeyPair(new InMemoryKeyStore()),
     });
-    expect(Result.isErr(res)).toBeTrue();
+    expect(Result.isErr(res)).toBeTruthy();
     expect(res[1]).toStrictEqual("NOT_VERIFIED");
 });
 
@@ -88,6 +88,6 @@ test("token failure", async () => {
         rolesOf: () => Promise.pure([]),
         getKeyPair: () => loadOrGenerateKeyPair(new InMemoryKeyStore()),
     });
-    expect(Result.isErr(res)).toBeTrue();
+    expect(Result.isErr(res)).toBeTruthy();
     expect(res[1]).toStrictEqual("TOKEN_GEN_FAILURE");
 });

@@ -1,36 +1,38 @@
 {
-  "name": "discord-oidc-worker",
-  "version": "0.1.0",
-  "private": true,
-  "description": "Discord OpenID Connect wrapper in Cloudflare Workers.",
-  "scripts": {
-    "start": "wrangler dev",
-    "deploy": "wrangler deploy --minify src/main.ts",
-    "lint": "eslint \"src/**/*.{ts,tsx}\"",
-    "format": "prettier --write \"src/**/*.{ts,tsx}\"",
-    "check": "prettier --check \"src/**/*.{ts,tsx}\" && tsc --noEmit"
-  },
-  "license": "MIT",
-  "dependencies": {
-    "@mikuroxina/mini-fn": "^7.0.0",
-    "hono": "^4.0.0",
-    "jose": "^6.0.0"
-  },
-  "packageManager": "bun@1.1.3",
-  "devDependencies": {
-    "@cloudflare/workers-types": "^4.20231218.0",
-    "@eslint/js": "^9.0.0",
-    "@types/bun": "^1.0.0",
-    "@typescript-eslint/eslint-plugin": "^8.0.0",
-    "@typescript-eslint/parser": "^8.0.0",
-    "eslint": "^9.0.0",
-    "eslint-config-prettier": "^10.0.0",
-    "eslint-plugin-react": "^7.33.2",
-    "eslint-plugin-simple-import-sort": "^12.0.0",
-    "globals": "^16.0.0",
-    "prettier": "^3.1.0",
-    "typescript": "^5.3.2",
-    "typescript-eslint": "^8.0.0",
-    "wrangler": "^4.0.0"
-  }
+    "name": "discord-oidc-worker",
+    "version": "0.1.0",
+    "private": true,
+    "description": "Discord OpenID Connect wrapper in Cloudflare Workers.",
+    "scripts": {
+        "start": "wrangler dev",
+        "deploy": "wrangler deploy --minify src/main.ts",
+        "lint": "eslint .",
+        "format": "prettier --write \"src/**/*.{ts,tsx}\"",
+        "check": "prettier --check \"src/**/*.{ts,tsx}\" && tsc --noEmit",
+        "test": "vitest"
+    },
+    "license": "MIT",
+    "dependencies": {
+        "@mikuroxina/mini-fn": "^7.0.0",
+        "hono": "^4.0.0",
+        "jose": "^6.0.0"
+    },
+    "devDependencies": {
+        "@cloudflare/workers-types": "^4.20231218.0",
+        "@eslint/js": "^9.0.0",
+        "@typescript-eslint/eslint-plugin": "^8.0.0",
+        "@typescript-eslint/parser": "^8.0.0",
+        "eslint": "^9.0.0",
+        "eslint-config-prettier": "^10.0.0",
+        "eslint-plugin-prettier": "^5.5.4",
+        "eslint-plugin-react": "^7.33.2",
+        "eslint-plugin-simple-import-sort": "^12.0.0",
+        "globals": "^16.0.0",
+        "prettier": "^3.1.0",
+        "typescript": "^5.3.2",
+        "typescript-eslint": "^8.0.0",
+        "vitest": "^4.0.15",
+        "wrangler": "^4.0.0"
+    },
+    "packageManager": "pnpm@10.25.0+sha512.5e82639027af37cf832061bcc6d639c219634488e0f2baebe785028a793de7b525ffcd3f7ff574f5e9860654e098fe852ba8ac5dd5cefe1767d23a020a92f501"
 }
