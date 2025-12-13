@@ -44,7 +44,7 @@ export const token = (
         .addMWith("_", ({ me }) =>
             me.verified === true
                 ? Promise.pure(Result.ok([]))
-                : Promise.pure(Result.err("NOT_VERIFIED")),
+                : Promise.pure(Result.err<TokenError>("NOT_VERIFIED")),
         )
         .addMWith(
             "roleClaims",
