@@ -1,5 +1,3 @@
-import "@cloudflare/workers-types";
-
 import { Result } from "@mikuroxina/mini-fn";
 
 import {
