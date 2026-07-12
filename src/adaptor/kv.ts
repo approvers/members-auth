@@ -1,5 +1,3 @@
-import type { KVNamespace } from "@cloudflare/workers-types";
-
 import type { KeyEntry, KeyStore } from "../service/key";
 
 const NAMESPACE_KEY = "keys";
