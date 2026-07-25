@@ -10,7 +10,7 @@ importers:
     dependencies:
       '@mikuroxina/mini-fn':
         specifier: ^7.0.0
-        version: 7.3.0
+        version: 7.4.0
       hono:
         specifier: ^4.0.0
         version: 4.12.31
@@ -500,8 +500,8 @@ packages:
   '@jridgewell/trace-mapping@0.3.9':
     resolution: {integrity: sha512-3Belt6tdc8bPgAtbcmdtNJlirVoTmEb5e2gC94PnkwEW9jI6CAHUeoG85tjWP5WquqfavoMtMwiG4P926ZKKuQ==}
 
-  '@mikuroxina/mini-fn@7.3.0':
-    resolution: {integrity: sha512-5SaweMK5EAq5av1Idf+qNGppIiC42Pf/C+6aglVuzxjKnB/3/gOUSlR8zfLKMGvrYy/Yko8eHwvE8d9M5d41Zg==}
+  '@mikuroxina/mini-fn@7.4.0':
+    resolution: {integrity: sha512-eLlhw7evaSoXZT5wi0nk8lSkezjvpyh9eniMTkuLMJBf7NGPT17Ec0sJPNyy2yy/cggxaWSaYCG3l29yEK7XgA==}
 
   '@napi-rs/wasm-runtime@1.1.6':
     resolution: {integrity: sha512-ZLv/JdUfkvOy9eCnnBaGfiO+XimbjebAeO+MRQqD/B+FR1tnRN0tpKSJHRbE8sFfS6aqsXZ67TQjfwfsxULVbg==}
@@ -2126,7 +2126,7 @@ snapshots:
       '@jridgewell/resolve-uri': 3.1.2
       '@jridgewell/sourcemap-codec': 1.5.5
 
-  '@mikuroxina/mini-fn@7.3.0': {}
+  '@mikuroxina/mini-fn@7.4.0': {}
 
   '@napi-rs/wasm-runtime@1.1.6(@emnapi/core@1.9.2)(@emnapi/runtime@1.9.2)':
     dependencies:
