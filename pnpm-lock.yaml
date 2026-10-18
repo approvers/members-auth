@@ -193,7 +193,7 @@ importers:
         version: 10.1.8(eslint@10.12.0(supports-color@10.2.2))
       eslint-plugin-prettier:
         specifier: ^5.5.4
-        version: 5.5.7(eslint-config-prettier@10.1.8(eslint@10.12.0(supports-color@10.2.2)))(eslint@10.12.0(supports-color@10.2.2))(prettier@3.9.9)
+        version: 5.5.7(eslint-config-prettier@10.1.8(eslint@10.12.0(supports-color@10.2.2)))(eslint@10.12.0(supports-color@10.2.2))(prettier@3.9.10)
       eslint-plugin-react:
         specifier: ^7.33.2
         version: 7.37.5(eslint@10.12.0(supports-color@10.2.2))
@@ -205,7 +205,7 @@ importers:
         version: 17.13.0
       prettier:
         specifier: ^3.1.0
-        version: 3.9.9
+        version: 3.9.10
       typescript:
         specifier: ^6.0.0
         version: 6.0.3
@@ -1654,8 +1654,8 @@ packages:
     resolution: {integrity: sha512-SxToR7P8Y2lWmv/kTzVLC1t/GDI2WGjMwNhLLE9qtH8Q13C+aEmuRlzDst4Up4s0Wc8sF2M+J57iB3cMLqftfg==}
     engines: {node: '>=6.0.0'}
 
-  prettier@3.9.9:
-    resolution: {integrity: sha512-Z/CJHIkdujO/OtN7nXUii0Rf3VT5SRuhjBA82Xvu2XhBUgX3nhP67T0LHceBdQLex7OOFGTox+Q5Yg8Jk2Qivg==}
+  prettier@3.9.10:
+    resolution: {integrity: sha512-skGHTH1Yb9QvaTC4hWnRTzEYtCpApF0UMBPz+t/0ZPzP8ihefo/btKd+QA7pUE0fEwA1SbS/NmhyEcstdXOIdA==}
     engines: {node: '>=14'}
     hasBin: true
 
@@ -2857,10 +2857,10 @@ snapshots:
     dependencies:
       eslint: 10.12.0(supports-color@10.2.2)
 
-  eslint-plugin-prettier@5.5.7(eslint-config-prettier@10.1.8(eslint@10.12.0(supports-color@10.2.2)))(eslint@10.12.0(supports-color@10.2.2))(prettier@3.9.9):
+  eslint-plugin-prettier@5.5.7(eslint-config-prettier@10.1.8(eslint@10.12.0(supports-color@10.2.2)))(eslint@10.12.0(supports-color@10.2.2))(prettier@3.9.10):
     dependencies:
       eslint: 10.12.0(supports-color@10.2.2)
-      prettier: 3.9.9
+      prettier: 3.9.10
       prettier-linter-helpers: 1.0.1
       synckit: 0.12.3
     optionalDependencies:
@@ -3423,7 +3423,7 @@ snapshots:
     dependencies:
       fast-diff: 1.3.0
 
-  prettier@3.9.9: {}
+  prettier@3.9.10: {}
 
   prop-types@15.8.1:
     dependencies:
