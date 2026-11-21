@@ -177,7 +177,7 @@ importers:
     dependencies:
       '@mikuroxina/mini-fn':
         specifier: ^7.0.0
-        version: 7.4.0
+        version: 7.4.1
       hono:
         specifier: ^4.0.0
         version: 4.13.18
@@ -697,8 +697,8 @@ packages:
   '@keyv/serialize@1.1.1':
     resolution: {integrity: sha512-dXn3FZhPv0US+7dtJsIi2R+c7qWYiReoEh5zUntWCf4oSpMNib8FDhSoed6m3QyZdx5hK7iLFkYk3rNxwt8vTA==}
 
-  '@mikuroxina/mini-fn@7.4.0':
-    resolution: {integrity: sha512-eLlhw7evaSoXZT5wi0nk8lSkezjvpyh9eniMTkuLMJBf7NGPT17Ec0sJPNyy2yy/cggxaWSaYCG3l29yEK7XgA==}
+  '@mikuroxina/mini-fn@7.4.1':
+    resolution: {integrity: sha512-t938Ol7CaM8JJQtf0Vu9jH80QvI9uNvZyHUHRb9bosMkrrBIqnvqTuEWGmQrEZ/EwB+fpc0JKKETPTbyq1vguw==}
 
   '@napi-rs/wasm-runtime@1.1.6':
     resolution: {integrity: sha512-ZLv/JdUfkvOy9eCnnBaGfiO+XimbjebAeO+MRQqD/B+FR1tnRN0tpKSJHRbE8sFfS6aqsXZ67TQjfwfsxULVbg==}
@@ -2351,7 +2351,7 @@ snapshots:
 
   '@keyv/serialize@1.1.1': {}
 
-  '@mikuroxina/mini-fn@7.4.0': {}
+  '@mikuroxina/mini-fn@7.4.1': {}
 
   '@napi-rs/wasm-runtime@1.1.6(@emnapi/core@1.9.2)(@emnapi/runtime@1.9.2)':
     dependencies:
